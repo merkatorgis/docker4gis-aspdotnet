@@ -1,20 +1,20 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
-WORKDIR /App
+ONBUILD WORKDIR /App
 
 # Copy everything
-COPY . ./
+ONBUILD COPY . ./
 # Restore as distinct layers
-RUN dotnet restore
+ONBUILD RUN dotnet restore
 # Build and publish a release
-RUN dotnet publish -c Release -o out
+ONBUILD RUN dotnet publish -c Release -o out
 
 ONBUILD ARG DOTNET_PROJECT
 ONBUILD ENV DOTNET_PROJECT=$DOTNET_PROJECT
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /App
-COPY --from=build-env /App/out .
+ONBUILD WORKDIR /App
+ONBUILD COPY --from=build-env /App/out .
 
 # Allow configuration before things start up.
 COPY conf/entrypoint /
