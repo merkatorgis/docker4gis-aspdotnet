@@ -14,4 +14,4 @@ docker container run --restart "$RESTART" --name "$CONTAINER" \
 	-v "$(docker4gis/bind.sh "$FILEPORT" /fileport)" \
 	--mount source="$VOLUME",target=/volume \
 	--network "$NETWORK" \
-	-d "$IMAGE" component_name "$@"
+	-d "$IMAGE" dotnet "$@"

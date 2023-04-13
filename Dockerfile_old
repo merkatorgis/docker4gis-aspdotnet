@@ -1,33 +1,17 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
-WORKDIR /App
-
-# Copy everything
-COPY . ./
-# Restore as distinct layers
-RUN dotnet restore
-# Build and publish a release
-RUN dotnet publish -c Release -o out
-
-ONBUILD ARG DOTNET_PROJECT
-ONBUILD ENV DOTNET_PROJECT=$DOTNET_PROJECT
-
-# Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
-WORKDIR /App
-COPY --from=build-env /App/out .
+FROM a_generc_image:a-specific-tag
 
 # Allow configuration before things start up.
 COPY conf/entrypoint /
 ENTRYPOINT ["/entrypoint"]
-CMD ["dotnet"]
+CMD ["component_name"]
 
 # Example plugin use.
-COPY conf/.plugins/bats /tmp/bats
-RUN /tmp/bats/install.sh
+#COPY conf/.plugins/bats /tmp/bats
+#RUN /tmp/bats/install.sh
 
 # This may come in handy.
-ONBUILD ARG DOCKER_USER
-ONBUILD ENV DOCKER_USER=$DOCKER_USER
+#ONBUILD ARG DOCKER_USER
+#ONBUILD ENV DOCKER_USER=$DOCKER_USER
 
 # Extension template, as required by `dg component`.
 COPY template /template/
