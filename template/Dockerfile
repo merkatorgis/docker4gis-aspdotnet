@@ -8,6 +8,6 @@ RUN dotnet restore
 # Build and publish a release
 RUN dotnet publish -c Release -o out
 
-FROM docker4gis/dotnet:v0.0.2
+FROM docker4gis/dotnet:v0.0.3
 
 COPY --from=build-env /App/out .
